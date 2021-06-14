@@ -35,4 +35,5 @@
 # VS code
 .vscode/
 
+.development
 build/*
