@@ -68,7 +68,7 @@
 
 
 #include "vl53l1_ll_def.h"
-#include "vl53l1_platform.h"
+#include "../platform/vl53l1_platform.h"
 #include "vl53l1_register_map.h"
 #include "vl53l1_core.h"
 #include "vl53l1_silicon_core.h"

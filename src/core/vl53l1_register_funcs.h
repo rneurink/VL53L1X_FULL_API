@@ -68,7 +68,7 @@
 #ifndef _VL53L1_REGISTER_FUNCS_H_
 #define _VL53L1_REGISTER_FUNCS_H_
 
-#include "vl53l1_platform.h"
+#include "../platform/vl53l1_platform.h"
 
 #ifdef __cplusplus
 extern "C"

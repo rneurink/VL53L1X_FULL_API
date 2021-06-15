@@ -74,8 +74,8 @@
 #include "vl53l1_ll_device.h"
 #include "vl53l1_error_codes.h"
 #include "vl53l1_register_structs.h"
-#include "vl53l1_platform_user_config.h"
-#include "vl53l1_platform_user_defines.h"
+#include "../platform/vl53l1_platform_user_config.h"
+#include "../platform/vl53l1_platform_user_defines.h"
 #include "vl53l1_error_exceptions.h"
 
 #ifdef __cplusplus

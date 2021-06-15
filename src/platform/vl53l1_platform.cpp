@@ -64,116 +64,122 @@
 
 #include "vl53l1_platform.h"
 // #include "vl53l1_platform_log.h"
-#include "vl53l1_api.h"
+#include "../core/vl53l1_api.h"
+#include "VL53L1X_i2ccoms.h"
 
-// #include "stm32xxx_hal.h"
 #include <string.h>
 // #include <time.h>
 // #include <math.h>
 
-
-// #define I2C_TIME_OUT_BASE   10
-// #define I2C_TIME_OUT_BYTE   1
-
-// #ifdef VL53L1_LOG_ENABLE
-// #define trace_print(level, ...) VL53L1_trace_print_module_function(VL53L1_TRACE_MODULE_PLATFORM, level, VL53L1_TRACE_FUNCTION_NONE, ##__VA_ARGS__)
-// #define trace_i2c(...) VL53L1_trace_print_module_function(VL53L1_TRACE_MODULE_NONE, VL53L1_TRACE_LEVEL_NONE, VL53L1_TRACE_FUNCTION_I2C, ##__VA_ARGS__)
-// #endif
-
-// #ifndef HAL_I2C_MODULE_ENABLED
-// #warning "HAL I2C module must be enable "
-// #endif
-
-//extern I2C_HandleTypeDef hi2c1;
-//#define VL53L0X_pI2cHandle    (&hi2c1)
-
-/* when not customized by application define dummy one */
-// #ifndef VL53L1_GetI2cBus
-/** This macro can be overloaded by user to enforce i2c sharing in RTOS context
- */
-// #   define VL53L1_GetI2cBus(...) (void)0
-// #endif
-
-// #ifndef VL53L1_PutI2cBus
-/** This macro can be overloaded by user to enforce i2c sharing in RTOS context
- */
-// #   define VL53L1_PutI2cBus(...) (void)0
-// #endif
-
-// uint8_t _I2CBuffer[256];
-
-// int _I2CWrite(VL53L1_DEV Dev, uint8_t *pdata, uint32_t count) {
-//     int status = 0;
-//     return status;
-// }
-
-// int _I2CRead(VL53L1_DEV Dev, uint8_t *pdata, uint32_t count) {
-//    int status = 0;
-//    return Status;
-// }
+#define VL53L1X_MAX_I2C_XFER_SIZE   64 /* Maximum buffer size to be used in i2c */
 
 VL53L1_Error VL53L1_WriteMulti(VL53L1_DEV Dev, uint16_t index, uint8_t *pdata, uint32_t count) {
     VL53L1_Error Status = VL53L1_ERROR_NONE;
+    int32_t status_int = 0;
+
+    if (count>=VL53L1X_MAX_I2C_XFER_SIZE){
+        Status = VL53L1_ERROR_INVALID_PARAMS;
+    }
+
+    status_int = i2c_write_multi(Dev->I2cDevAddr, index, pdata, count);
+
+    if (status_int != 0)
+        Status = VL53L1_ERROR_CONTROL_INTERFACE;
+
     return Status;
 }
 
 // the ranging_sensor_comms.dll will take care of the page selection
 VL53L1_Error VL53L1_ReadMulti(VL53L1_DEV Dev, uint16_t index, uint8_t *pdata, uint32_t count) {
     VL53L1_Error Status = VL53L1_ERROR_NONE;
+    int32_t status_int;
+
+    if (count>=VL53L1X_MAX_I2C_XFER_SIZE){
+        Status = VL53L1_ERROR_INVALID_PARAMS;
+    }
+
+    status_int = i2c_read_multi(Dev->I2cDevAddr, index, pdata, count);
+
+    if (status_int != 0)
+        Status = VL53L1_ERROR_CONTROL_INTERFACE;
+
     return Status;
 }
 
 VL53L1_Error VL53L1_WrByte(VL53L1_DEV Dev, uint16_t index, uint8_t data) {
     VL53L1_Error Status = VL53L1_ERROR_NONE;
+    int32_t status_int;
+
+    status_int = i2c_write_byte(Dev->I2cDevAddr, index, data);
+
+    if (status_int != 0)
+        Status = VL53L1_ERROR_CONTROL_INTERFACE;
+
     return Status;
 }
 
 VL53L1_Error VL53L1_WrWord(VL53L1_DEV Dev, uint16_t index, uint16_t data) {
     VL53L1_Error Status = VL53L1_ERROR_NONE;
+    int32_t status_int;
+
+    status_int = i2c_write_word(Dev->I2cDevAddr, index, data);
+
+    if (status_int != 0)
+        Status = VL53L1_ERROR_CONTROL_INTERFACE;
+
     return Status;
 }
 
 VL53L1_Error VL53L1_WrDWord(VL53L1_DEV Dev, uint16_t index, uint32_t data) {
     VL53L1_Error Status = VL53L1_ERROR_NONE;
-    return Status;
-}
+    int32_t status_int;
 
-VL53L1_Error VL53L1_UpdateByte(VL53L1_DEV Dev, uint16_t index, uint8_t AndData, uint8_t OrData) {
-    VL53L1_Error Status = VL53L1_ERROR_NONE;
+    status_int = i2c_write_Dword(Dev->I2cDevAddr, index, data);
+
+    if (status_int != 0)
+        Status = VL53L1_ERROR_CONTROL_INTERFACE;
+
     return Status;
 }
 
 VL53L1_Error VL53L1_RdByte(VL53L1_DEV Dev, uint16_t index, uint8_t *data) {
     VL53L1_Error Status = VL53L1_ERROR_NONE;
+    int32_t status_int;
+
+    status_int = i2c_read_byte(Dev->I2cDevAddr, index, data);
+
+    if (status_int != 0)
+        Status = VL53L1_ERROR_CONTROL_INTERFACE;
+
     return Status;
 }
 
 VL53L1_Error VL53L1_RdWord(VL53L1_DEV Dev, uint16_t index, uint16_t *data) {
     VL53L1_Error Status = VL53L1_ERROR_NONE;
+    int32_t status_int;
+
+    status_int = i2c_read_word(Dev->I2cDevAddr, index, data);
+
+    if (status_int != 0)
+        Status = VL53L1_ERROR_CONTROL_INTERFACE;
+
     return Status;
 }
 
 VL53L1_Error VL53L1_RdDWord(VL53L1_DEV Dev, uint16_t index, uint32_t *data) {
     VL53L1_Error Status = VL53L1_ERROR_NONE;
+    int32_t status_int;
+
+    status_int = i2c_read_Dword(Dev->I2cDevAddr, index, data);
+
+    if (status_int != 0)
+        Status = VL53L1_ERROR_CONTROL_INTERFACE;
+
     return Status;
 }
 
 VL53L1_Error VL53L1_GetTickCount(
 	uint32_t *ptick_count_ms)
-{
-	VL53L1_Error status  = VL53L1_ERROR_NONE;
-	return status;
-}
-
-//#define trace_print(level, ...) \
-//	_LOG_TRACE_PRINT(VL53L1_TRACE_MODULE_PLATFORM, \
-//	level, VL53L1_TRACE_FUNCTION_NONE, ##__VA_ARGS__)
-
-//#define trace_i2c(...) \
-//	_LOG_TRACE_PRINT(VL53L1_TRACE_MODULE_NONE, \
-//	VL53L1_TRACE_LEVEL_NONE, VL53L1_TRACE_FUNCTION_I2C, ##__VA_ARGS__)
-
-VL53L1_Error VL53L1_GetTimerFrequency(int32_t *ptimer_freq_hz)
 {
 	VL53L1_Error status  = VL53L1_ERROR_NONE;
 	return status;

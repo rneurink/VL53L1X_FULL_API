@@ -67,7 +67,7 @@
  */
 
 #include "vl53l1_ll_def.h"
-#include "vl53l1_platform_log.h"
+#include "../platform/vl53l1_platform_log.h"
 #include "vl53l1_register_structs.h"
 #include "vl53l1_register_settings.h"
 #include "vl53l1_core.h"
